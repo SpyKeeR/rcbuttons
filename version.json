@@ -6,6 +6,14 @@
   "changes": [
     {
       "type": "improvement",
+      "description": "Avertissements ajoutés dans la documentation : install-protocols.bat doit être supprimé du serveur web après clonage"
+    },
+    {
+      "type": "improvement",
+      "description": "Documentation explicite de la séparation serveur web (Linux) / postes techniciens (Windows)"
+    },
+    {
+      "type": "improvement",
       "description": "Anonymisation complète : remplacement de toutes les mentions 'CIPS' par 'MSRA' dans l'ensemble du projet"
     },
     {

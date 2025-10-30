@@ -38,8 +38,21 @@ git clone https://github.com/SpyKeeR/rcbuttons.git rcbuttons
 
 ### Étape 2 : Déploiement des protocoles sur les postes (OBLIGATOIRE)
 
-🔴 **CRITIQUE** : Les fichiers `.bat` ne sont pas inclus dans le dépôt Git (voir `.gitignore`).  
-Téléchargez `install-protocols.bat` depuis **GitHub Releases** ou recréez-le depuis l'historique Git.
+🔴 **ATTENTION : Supprimer `install-protocols.bat` du serveur web après clonage !**
+
+**Pourquoi ?**
+- ❌ Le serveur GLPI est généralement sous Linux (Apache/Nginx)
+- ❌ Un fichier `.bat` sur le serveur web n'a aucune utilité
+- ✅ Le `.bat` est destiné UNIQUEMENT aux postes techniciens Windows
+
+**Commande à exécuter sur le serveur :**
+```bash
+rm /var/www/html/glpi/plugins/rcbuttons/install-protocols.bat
+```
+
+**Où installer le .bat ?**
+- ✅ **Sur les postes techniciens Windows** qui contrôlent à distance les clients
+- ❌ **PAS sur le serveur web** GLPI (`/var/www/html/glpi/plugins/rcbuttons/`)
 
 ⚠️ **Le script DOIT être exécuté en tant qu'administrateur sur CHAQUE poste technicien.**
 
@@ -56,30 +69,14 @@ Téléchargez `install-protocols.bat` depuis **GitHub Releases** ou recréez-le 
 - ✅ Affiche un récapitulatif coloré structuré
 - ✅ Nettoie la clé VirtualTerminalLevel en fin d'exécution
 
-**Option A : Déploiement GPO (Recommandé)**
+**Installation manuelle :**
 
-1. Télécharger `install-protocols.bat` depuis GitHub Releases
-2. Le copier sur un partage réseau accessible
-3. Créer une GPO :
-   - Configuration ordinateur → Stratégies → Paramètres Windows → Scripts
-   - Démarrage → Ajouter → `\\serveur\partage\install-protocols.bat`
-4. Appliquer la GPO sur l'OU des techniciens
-5. Au prochain démarrage, le script s'exécute en admin
-
-**Option B : Installation manuelle**
-
-1. Télécharger `install-protocols.bat` depuis GitHub Releases
+1. Récupérer `install-protocols.bat` depuis le dépôt Git
 2. **Clic droit → "Exécuter en tant qu'administrateur"**
 3. Suivre les étapes interactives (choix colorés)
 4. Vérifier le récapitulatif final
 
-**Option C : Création manuelle du .bat**
-
-Si vous devez recréer le fichier :
-1. Récupérer le contenu depuis l'historique Git du dépôt
-2. Créer un nouveau fichier `install-protocols.bat`
-3. Coller le contenu et sauvegarder
-4. Exécuter en administrateur
+> **💡 À venir** : Déploiement GPO avec paramètre `-gpo` pour installation silencieuse (v1.2.0)
 
 ---
 

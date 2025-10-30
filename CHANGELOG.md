@@ -12,20 +12,27 @@
 - 🎨 Mise à jour des classes CSS : `.rcbutton-cips` → `.rcbutton-msra`
 - 📝 Mise à jour des textes utilisateur : "Assistance CIPS" → "Assistance MSRA"
 
+**Sécurité et Déploiement :**
+- ⚠️ Avertissements ajoutés dans README.md et INSTALL.md sur la nécessité de supprimer `install-protocols.bat` du serveur web après clonage
+- 📝 Documentation explicite sur la séparation serveur web Linux / postes techniciens Windows
+- 💡 Note ajoutée pour le futur déploiement GPO avec paramètre `-gpo` (v1.2.0)
+
 **Documentation Mise à Jour :**
-- 📚 README.md : Terminologie MSRA dans toutes les sections
-- 📚 INSTALL.md : Instructions avec nouvelle nomenclature
+- 📚 README.md : Terminologie MSRA + avertissements sécurité serveur web
+- 📚 INSTALL.md : Instructions simplifiées pour installation manuelle
 - 📚 CHANGELOG.md : Historique corrigé
 - 📚 composer.json : Keywords et description actualisés
 - 📚 assist-redirect.html : Messages utilisateur mis à jour
 
 **Fichiers Modifiés :**
-- `public/assets/js/assist-button.js` (8 modifications)
-- `public/assets/js/assist-config.js.php` (4 modifications)
-- `public/assets/css/assist-button.css` (2 modifications)
-- `public/assist-redirect.html` (1 modification)
-- `composer.json` (2 modifications)
-- Documentation complète (README, INSTALL, CHANGELOG)
+- ✏️ `public/assets/js/assist-button.js` (8 modifications)
+- ✏️ `public/assets/js/assist-config.js.php` (4 modifications)
+- ✏️ `public/assets/css/assist-button.css` (2 modifications)
+- ✏️ `public/assist-redirect.html` (1 modification)
+- ✏️ `composer.json` (2 modifications)
+- ✏️ `README.md` - Avertissement sécurité + structure mise à jour
+- ✏️ `INSTALL.md` - Section dédiée "Où installer le .bat ?"
+- ✏️ `CHANGELOG.md` - Documentation des changements
 
 ---
 

@@ -34,12 +34,14 @@ Puis dans GLPI : **Configuration → Plugins → Installer → Activer**
 
 ### 2️⃣ Déploiement des protocoles (OBLIGATOIRE sur chaque poste)
 
-⚠️ **IMPORTANT** : Les fichiers `.bat` ne sont pas dans le dépôt (voir `.gitignore`).  
-Téléchargez `install-protocols.bat` depuis **GitHub Releases** ou recréez-le depuis l'historique Git.
+🔴 **ATTENTION** : Après avoir cloné le dépôt sur le serveur GLPI, **SUPPRIMER IMMÉDIATEMENT `install-protocols.bat`** !
+- ❌ Le fichier `.bat` ne doit **JAMAIS** rester sur le serveur web Linux
+- ✅ Il doit être exécuté **UNIQUEMENT** sur les postes techniciens Windows
+- ⚠️ Commande à exécuter sur le serveur : `rm /var/www/html/glpi/plugins/rcbuttons/install-protocols.bat`
 
-🔴 **Installation REQUISE sur CHAQUE poste technicien** :
-- Via GPO (recommandé) : Script de démarrage en mode administrateur
-- Manuellement : **Clic droit → "Exécuter en tant qu'administrateur"**
+🔴 **Installation REQUISE sur CHAQUE poste technicien Windows** :
+- Récupérer `install-protocols.bat` depuis le dépôt Git
+- **Clic droit → "Exécuter en tant qu'administrateur"**
 
 Le script `install-protocols.bat` va :
 - ✅ Détecter et configurer automatiquement le support ANSI (couleurs)
@@ -93,9 +95,10 @@ rcbuttons/
 ├── setup.php                          # Plugin GLPI principal
 ├── hook.php                           # Hooks installation/désinstallation
 ├── version.json                       # Métadonnées de version
-├── CHANGELOG.md                       # Historique des versions
+├── install-protocols.bat              # ⚠️ À SUPPRIMER du serveur web après clonage !
+├── README.md                          # Documentation principale
 ├── INSTALL.md                         # Guide d'installation détaillé
-├── .gitignore                         # Exclusion des .bat et .reg
+├── CHANGELOG.md                       # Historique des versions
 ├── public/                            # Fichiers web accessibles
 │   ├── assist-redirect.html           # Page de lancement des protocoles
 │   └── assets/
@@ -104,11 +107,9 @@ rcbuttons/
 │       │   └── assist-button.js       # Logique d'injection
 │       └── css/
 │           └── assist-button.css      # Styles des boutons
-└── [.bat files]                       # Non versionnés (voir Releases)
 ```
 
-**Note :** Les fichiers `.bat` et `.reg` sont exclus du dépôt Git (`.gitignore`).  
-Téléchargez-les depuis **GitHub Releases** ou recréez-les depuis l'historique.
+**⚠️ IMPORTANT** : `install-protocols.bat` est inclus dans le dépôt mais **doit être supprimé du serveur web** après clonage !
 
 ---
 
