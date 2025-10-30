@@ -17,7 +17,7 @@
 - 🎨 **Interface soignée** : design moderne avec animations et thème médical
 - 🛠️ **Mode debug** configurable pour le diagnostic
 - ✅ **Non-intrusif** : aucune modification du core GLPI
-- 🌐 **Compatible** GLPI 11.0.0 à 11.0.99
+- 🌐 **Compatible** GLPI 11.0.x
 
 ---
 
