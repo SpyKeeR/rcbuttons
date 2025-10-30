@@ -172,7 +172,7 @@
         } else {
             // Affichage du protocole utilisé
             const protocolNames = {
-                'assist-msra': 'Microsoft Remote Assistance (CIPS)',
+                'assist-msra': 'Microsoft Remote Assistance',
                 'ctrl-dw': 'Dameware Remote Control'
             };
             
@@ -224,10 +224,10 @@
                     );
                 } else {
                     // Le protocole n'a probablement pas été lancé
-                    const githubLink = 'https://github.com/SpyKeeR/rcbuttons/releases/latest';
+                    const githubLink = 'https://github.com/SpyKeeR/rcbuttons/blob/main/install-protocols.bat';
                     hideSpinner();
                     statusEl.textContent = '⚠️ Gestionnaire de protocole manquant';
-                    messageEl.innerHTML = `Le protocole "<strong>${protocol}://</strong>" n'est pas installé sur votre poste.<br><br>Téléchargez et exécutez <strong>install-assist-protocols.bat</strong> en tant qu'administrateur.<br><br>📥 <a href="${githubLink}" target="_blank">Télécharger depuis GitHub Releases</a>`;
+                    messageEl.innerHTML = `Le protocole "<strong>${protocol}://</strong>" n'est pas installé sur votre poste.<br><br>Téléchargez et exécutez <strong>install-assist-protocols.bat</strong> en tant qu'administrateur.<br><br>📥 <a href="${githubLink}" target="_blank">Télécharger depuis GitHub</a>`;
                     messageEl.className = 'error';
                     messageEl.style.display = 'block';
                     

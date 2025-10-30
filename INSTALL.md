@@ -4,12 +4,14 @@
 
 Plugin GLPI qui ajoute des boutons d'assistance à distance directement sur les fiches ordinateurs.
 
-**Version :** 1.0.2  
-**Compatible :** GLPI 11.0.0 à 11.0.99
+**Version :** 1.1.2  
+**Compatible :** GLPI 11.0.0 à 11.0.99  
+**Prérequis :** Windows 10+, Windows Server 2016+
 
 **Protocoles supportés :**
-- `assist-msra://` → Microsoft Remote Assistance (CIPS)
+- `assist-msra://` → Microsoft Remote Assistance
 - `ctrl-dw://` → Dameware Remote Control
+- `dwrcc://` → Protocole original Dameware (restauré si nécessaire)
 
 ---
 
@@ -34,29 +36,50 @@ git clone https://github.com/SpyKeeR/rcbuttons.git rcbuttons
 
 ---
 
-### Étape 2 : Déploiement des protocoles sur les postes
+### Étape 2 : Déploiement des protocoles sur les postes (OBLIGATOIRE)
 
-⚠️ **Important** : Les fichiers `.bat` ne sont pas inclus dans le dépôt Git (voir `.gitignore`).  
-Téléchargez `install-assist-protocols.bat` depuis GitHub Releases ou créez-le manuellement.
+🔴 **CRITIQUE** : Les fichiers `.bat` ne sont pas inclus dans le dépôt Git (voir `.gitignore`).  
+Téléchargez `install-protocols.bat` depuis **GitHub Releases** ou recréez-le depuis l'historique Git.
+
+⚠️ **Le script DOIT être exécuté en tant qu'administrateur sur CHAQUE poste technicien.**
+
+**Ce que fait le script `install-protocols.bat` :**
+- ✅ Vérifie les droits administrateur
+- ✅ Active automatiquement le support ANSI (Windows 10/11)
+- ✅ Détecte automatiquement DWRCC.exe (6 chemins possibles)
+- ✅ Détecte automatiquement MSRA.exe
+- ✅ Enregistre les protocoles `ctrl-dw://` et `assist-msra://`
+- ✅ Crée le wrapper `rcbuttons-wrapper.bat` dans System32
+- ✅ Gère le protocole `dwrcc://` original (restauration si nécessaire)
+- ✅ Détecte et supprime les gestionnaires orphelins
+- ✅ Nettoie l'ancien wrapper `remote-assist-wrapper.bat`
+- ✅ Affiche un récapitulatif coloré structuré
+- ✅ Nettoie la clé VirtualTerminalLevel en fin d'exécution
 
 **Option A : Déploiement GPO (Recommandé)**
 
-1. Télécharger le fichier `.bat` depuis GitHub
+1. Télécharger `install-protocols.bat` depuis GitHub Releases
 2. Le copier sur un partage réseau accessible
 3. Créer une GPO :
    - Configuration ordinateur → Stratégies → Paramètres Windows → Scripts
-   - Démarrage → Ajouter → `\\serveur\partage\install-assist-protocols.bat`
+   - Démarrage → Ajouter → `\\serveur\partage\install-protocols.bat`
 4. Appliquer la GPO sur l'OU des techniciens
+5. Au prochain démarrage, le script s'exécute en admin
 
 **Option B : Installation manuelle**
 
-1. Télécharger `install-assist-protocols.bat` depuis GitHub
-2. Clic droit → "Exécuter en tant qu'administrateur"
-3. Vérifier les messages de succès dans la console
+1. Télécharger `install-protocols.bat` depuis GitHub Releases
+2. **Clic droit → "Exécuter en tant qu'administrateur"**
+3. Suivre les étapes interactives (choix colorés)
+4. Vérifier le récapitulatif final
 
 **Option C : Création manuelle du .bat**
 
-Voir le contenu du fichier dans le dépôt GitHub (historique Git) si besoin de le recréer.
+Si vous devez recréer le fichier :
+1. Récupérer le contenu depuis l'historique Git du dépôt
+2. Créer un nouveau fichier `install-protocols.bat`
+3. Coller le contenu et sauvegarder
+4. Exécuter en administrateur
 
 ---
 
@@ -67,7 +90,7 @@ Voir le contenu du fichier dans le dépôt GitHub (historique Git) si besoin de 
 ```php
 // === CONFIGURATION ===
 // IDs des profils GLPI autorisés
-$cips_profile_ids = [9, 3];     // Profils pouvant utiliser Assistance CIPS
+$msra_profile_ids = [9, 3];     // Profils pouvant utiliser Assistance MSRA
 $admin_profile_ids = [3];        // Profils pouvant utiliser Dameware
 
 // Activer/désactiver les logs de debug dans la console
@@ -109,9 +132,9 @@ Ouvrir `test-protocols.html` (non inclus dans Git) dans un navigateur et cliquer
 **Console JS (F12) - si `$enable_debug_logs = true` :**
 ```
 [RCButtons] Page ordinateur détectée
-[RCButtons] Profil CIPS: true
+[RCButtons] Profil MSRA: true
 [RCButtons] Nom trouvé: PC-BUREAU-01
-[RCButtons] Bouton CIPS ajouté
+[RCButtons] Bouton MSRA ajouté
 ```
 
 **Vérifications :**

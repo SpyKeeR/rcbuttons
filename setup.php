@@ -27,7 +27,7 @@
  * -------------------------------------------------------------------------
  */
 
-define('PLUGIN_RCBUTTONS_VERSION', '1.0.2');
+define('PLUGIN_RCBUTTONS_VERSION', '1.1.2');
 define('PLUGIN_RCBUTTONS_MIN_GLPI', '11.0.0');
 define('PLUGIN_RCBUTTONS_MAX_GLPI', '11.0.99');
 

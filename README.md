@@ -2,7 +2,7 @@
 
 **Remote Control Buttons** : Ajoutez des boutons d'assistance à distance directement sur les fiches ordinateurs de GLPI.
 
-[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](https://github.com/SpyKeeR/rcbuttons)
+[![Version](https://img.shields.io/badge/version-1.1.2-blue.svg)](https://github.com/SpyKeeR/rcbuttons)
 [![GLPI](https://img.shields.io/badge/GLPI-11.0.x-green.svg)](https://glpi-project.org/)
 [![License](https://img.shields.io/badge/license-GPLv3-orange.svg)](LICENSE)
 
@@ -12,7 +12,7 @@
 
 - 🎯 **Boutons intégrés** directement sur la fiche ordinateur
 - 👤 **Basé sur les profils** : affichage personnalisé selon l'utilisateur
-- 🔗 **Protocoles personnalisés** : `assist-msra://` (CIPS) et `ctrl-dw://` (Dameware)
+- 🔗 **Protocoles personnalisés** : `assist-msra://` (MSRA) et `ctrl-dw://` (Dameware)
 - 🤖 **Extraction automatique** du nom d'ordinateur (méthode fiabilisée)
 - 🎨 **Interface soignée** : design moderne avec animations et thème médical
 - 🛠️ **Mode debug** configurable pour le diagnostic
@@ -32,21 +32,28 @@ git clone https://github.com/SpyKeeR/rcbuttons.git rcbuttons
 
 Puis dans GLPI : **Configuration → Plugins → Installer → Activer**
 
-### 2️⃣ Déploiement des protocoles
+### 2️⃣ Déploiement des protocoles (OBLIGATOIRE sur chaque poste)
 
-⚠️ Les fichiers `.bat` ne sont pas dans le dépôt (voir `.gitignore`).  
-Téléchargez `install-assist-protocols.bat` depuis **GitHub Releases** ou l'historique Git.
+⚠️ **IMPORTANT** : Les fichiers `.bat` ne sont pas dans le dépôt (voir `.gitignore`).  
+Téléchargez `install-protocols.bat` depuis **GitHub Releases** ou recréez-le depuis l'historique Git.
 
-**Déployez-le** sur les postes des techniciens :
-- Via GPO (recommandé) : Script de démarrage
-- Manuellement : Exécuter en administrateur
+🔴 **Installation REQUISE sur CHAQUE poste technicien** :
+- Via GPO (recommandé) : Script de démarrage en mode administrateur
+- Manuellement : **Clic droit → "Exécuter en tant qu'administrateur"**
+
+Le script `install-protocols.bat` va :
+- ✅ Détecter et configurer automatiquement le support ANSI (couleurs)
+- ✅ Enregistrer les protocoles `ctrl-dw://` et `assist-msra://`
+- ✅ Créer le wrapper `rcbuttons-wrapper.bat` dans System32
+- ✅ Détecter et supprimer les gestionnaires orphelins
+- ✅ Nettoyer les anciennes installations automatiquement
 
 ### 3️⃣ Configuration
 
 Éditez `public/assets/js/assist-config.js.php` (lignes 22-26) :
 
 ```php
-$cips_profile_ids = [9, 3];   // Profils CIPS
+$msra_profile_ids = [9, 3];   // Profils MSRA
 $admin_profile_ids = [3];      // Profils Admin (Dameware)
 $enable_debug_logs = true;     // false en production
 ```
@@ -69,12 +76,12 @@ $enable_debug_logs = true;     // false en production
 
 | Bouton | Protocole | Outil lancé | Profils |
 |--------|-----------|-------------|---------|
-| **Assistance CIPS** | `assist-msra://` | `msra.exe` | CIPS + Admin |
+| **Assistance MSRA** | `assist-msra://` | `msra.exe` | MSRA + Admin |
 | **Contrôle Dameware** | `ctrl-dw://` | `DWRCC.exe` | Admin seul |
 
 ### Règles d'affichage
 
-- **Profils CIPS** (`$cips_profile_ids`) : Voient le bouton CIPS
+- **Profils MSRA** (`$msra_profile_ids`) : Voient le bouton MSRA
 - **Profils Admin** (`$admin_profile_ids`) : Voient les deux boutons
 
 ---
@@ -129,12 +136,19 @@ Téléchargez-les depuis **GitHub Releases** ou recréez-les depuis l'historique
 
 Voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet des modifications.
 
-**Version 1.0.2** (28 janvier 2025) :
-- ✅ Mode debug configurable
-- ✅ Interface utilisateur améliorée (nouveaux titres et couleurs)
-- ✅ Extraction du nom d'ordinateur simplifiée et épurée
-- ✅ Détection des protocoles avec page de feedback
-- ✅ `.gitignore` pour exclusion des `.bat`
+**Version 1.1.2** (30 octobre 2025) :
+- 🔄 Anonymisation complète : toutes les mentions "CIPS" remplacées par "MSRA"
+- 🔧 Refactorisation des variables et noms de profils dans tout le code
+- 📚 Documentation mise à jour avec nouvelle terminologie
+
+**Version 1.1.0** (30 octobre 2025) :
+- 🎉 Script d'installation unifié `install-protocols.bat` avec interface colorée ANSI
+- ✨ Gestion automatique du support ANSI (Windows 10/11/Server) avec auto-restart
+- 🔍 Détection et suppression automatique des gestionnaires orphelins
+- 🛠️ Création dynamique du wrapper avec logique conditionnelle
+- 🧹 Nettoyage automatique des anciennes installations
+- 📊 Récapitulatif visuel structuré avec sections dédiées
+- ⚙️ Mode interactif avec choix utilisateur (Mettre à jour/Utiliser/Supprimer)
 
 ---
 

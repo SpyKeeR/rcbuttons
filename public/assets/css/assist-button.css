@@ -30,7 +30,7 @@
     cursor: pointer;
 }
 
-.rcbuttons-btn:hover {
+.rcbutton-msra:hover {
     background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
     color: white !important;
@@ -94,7 +94,7 @@
 }
 
 /* Styles spécifiques selon le type */
-/* Bouton CIPS - Couleurs santé/hôpital (vert menthe/turquoise) */
+/* Bouton MSRA - Couleurs santé (vert menthe/turquoise) */
 .rcbuttons-btn[href*="msra"],
 .rcbuttons-btn[href*="assist-msra"] {
     background: linear-gradient(135deg, #26a69a 0%, #00897b 100%);

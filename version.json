@@ -1,44 +1,93 @@
 {
-  "version": "1.0.2",
-  "release_date": "2025-01-28",
+  "version": "1.1.2",
+  "release_date": "2025-10-30",
   "glpi_min_version": "11.0.0",
   "glpi_max_version": "11.0.99",
   "changes": [
     {
-      "type": "fix",
-      "description": "Amélioration du script de nettoyage : supprime assist-msra:// et ctrl-dw://, restaure dwrcc:// original"
+      "type": "improvement",
+      "description": "Anonymisation complète : remplacement de toutes les mentions 'CIPS' par 'MSRA' dans l'ensemble du projet"
     },
     {
-      "type": "fix",
-      "description": "Remplacement du protocole dwrcc:// par ctrl-dw:// pour éviter les conflits"
+      "type": "improvement",
+      "description": "Refactorisation des variables et noms de profils : isCIPSProfile → isMSRAProfile, $cips_profile_ids → $msra_profile_ids"
     },
     {
-      "type": "fix",
-      "description": "Correction de l'extraction du nom d'ordinateur (filtrage du mot 'Ordinateur')"
-    },
-    {
-      "type": "feature",
-      "description": "Restructuration avec dossier public/ pour accessibilité web"
+      "type": "improvement",
+      "description": "Mise à jour de la documentation (README, INSTALL, CHANGELOG) avec nouvelle terminologie"
     },
     {
       "type": "feature",
-      "description": "Déploiement automatique de assist-redirect.html via hook d'installation"
+      "description": "Script d'installation unifié install-protocols.bat avec gestion complète des protocoles"
     },
     {
       "type": "feature",
-      "description": "Ajout de scripts de test (test-protocols.html et test-protocols.ps1)"
+      "description": "Gestion automatique du support ANSI avec détection Windows 11 et auto-configuration"
     },
     {
       "type": "feature",
-      "description": "Ajout de documentation complète (README, INSTALL, MIGRATION, CHANGELOG)"
+      "description": "Interface colorée en CMD avec codes ANSI (expansions immédiates pour optimisation)"
+    },
+    {
+      "type": "feature",
+      "description": "Détection et suppression automatique des gestionnaires orphelins (ctrl-dw://, assist-msra://)"
+    },
+    {
+      "type": "feature",
+      "description": "Gestion du protocole dwrcc:// original avec restauration depuis anciens wrappers"
+    },
+    {
+      "type": "feature",
+      "description": "Création dynamique du wrapper rcbuttons-wrapper.bat avec logique conditionnelle"
+    },
+    {
+      "type": "feature",
+      "description": "Détection de 6 chemins DWRCC.exe (SolarWinds, DameWare Development) avec priorités"
+    },
+    {
+      "type": "feature",
+      "description": "Nettoyage automatique de l'ancien wrapper remote-assist-wrapper.bat"
+    },
+    {
+      "type": "feature",
+      "description": "Nettoyage automatique de la clé VirtualTerminalLevel si ajoutée par le script"
+    },
+    {
+      "type": "feature",
+      "description": "Récapitulatif visuel avec sections structurées (Dameware, MSRA, Wrapper, Support ANSI)"
+    },
+    {
+      "type": "feature",
+      "description": "Mode interactif avec choix utilisateur (Mettre à jour/Utiliser/Supprimer)"
+    },
+    {
+      "type": "improvement",
+      "description": "Vérification des droits administrateur avant toute opération"
+    },
+    {
+      "type": "improvement",
+      "description": "Gestion des espaces dans les chemins DWRCC.exe avec guillemets appropriés"
+    },
+    {
+      "type": "improvement",
+      "description": "Timeouts automatiques (2 secondes) au lieu de pause manuelle"
+    },
+    {
+      "type": "improvement",
+      "description": "Messages d'erreur et de succès colorés pour meilleure lisibilité"
+    },
+    {
+      "type": "improvement",
+      "description": "Auto-restart du script pour appliquer le support ANSI (via fichier témoin)"
     }
   ],
   "breaking_changes": [
-    "Le protocole dwrcc:// n'est plus utilisé, remplacé par ctrl-dw://",
-    "Structure des dossiers modifiée : assets/ → public/assets/",
-    "Nécessite de redéployer install-assist-protocols.bat sur les postes clients"
+    "Le script install-assist-protocols.bat est remplacé par install-protocols.bat (nouveau nom)",
+    "Nécessite Windows 10+ ou Windows Server 2016+ pour le support ANSI",
+    "Installation requise sur CHAQUE poste technicien (GPO ou manuel en mode admin)",
+    "L'ancien wrapper remote-assist-wrapper.bat sera supprimé automatiquement"
   ],
-  "migration_notes": "Voir MIGRATION.md pour le guide détaillé",
+  "migration_notes": "Exécuter install-protocols.bat (GitHub : SpyKeeR/rcbuttons) en administrateur sur tous les postes techniciens. Le script détectera et nettoiera automatiquement les anciennes installations.",
   "authors": [
     "SpyKeeR"
   ]

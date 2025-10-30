@@ -42,7 +42,7 @@ $user_id = $_SESSION['glpiID'] ?? 0;
 // ============================================================================
 
 // IDs des profils autorisés
-$cips_profile_ids = [9, 3];  // CIPS_Helpers (9) et Admin (3) voient Assistance CIPS
+$msra_profile_ids = [9, 3];  // Support_Helpers (9) et Admin (3) voient Assistance MSRA
 $admin_profile_ids = [3];    // Admin (3) voit Dameware
 
 // Activer/désactiver les logs dans la console du navigateur (true = activé, false = désactivé)
@@ -50,7 +50,7 @@ $enable_debug_logs = true;
 
 // ============================================================================
 
-$is_cips = in_array($profile_id, $cips_profile_ids);
+$is_msra = in_array($profile_id, $msra_profile_ids);
 $is_admin = in_array($profile_id, $admin_profile_ids);
 
 // Générer le JavaScript
@@ -58,7 +58,7 @@ header('Content-Type: application/javascript; charset=UTF-8');
 ?>
 // Configuration du plugin RCButtons
 window.GLPI_RCBUTTONS_CONFIG = {
-    isCIPSProfile: <?php echo $is_cips ? 'true' : 'false'; ?>,
+    isMSRAProfile: <?php echo $is_msra ? 'true' : 'false'; ?>,
     isAdminProfile: <?php echo $is_admin ? 'true' : 'false'; ?>,
     profileId: <?php echo intval($profile_id); ?>,
     profileName: '<?php echo addslashes($profile_name); ?>',

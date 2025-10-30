@@ -1,5 +1,90 @@
 # Résumé des Modifications - Plugin RCButtons
 
+## Version 1.1.2 (30 octobre 2025)
+
+### 🔄 Améliorations et Refactorisation
+
+**Anonymisation Complète du Code :**
+- ✅ Remplacement de toutes les mentions "CIPS" par "MSRA" dans l'ensemble du projet
+- 🔧 Refactorisation des variables JavaScript : `isCIPSProfile` → `isMSRAProfile`
+- 🔧 Refactorisation des variables PHP : `$cips_profile_ids` → `$msra_profile_ids`
+- 🔧 Mise à jour des commentaires : "CIPS_Helpers" → "Support_Helpers"
+- 🎨 Mise à jour des classes CSS : `.rcbutton-cips` → `.rcbutton-msra`
+- 📝 Mise à jour des textes utilisateur : "Assistance CIPS" → "Assistance MSRA"
+
+**Documentation Mise à Jour :**
+- 📚 README.md : Terminologie MSRA dans toutes les sections
+- 📚 INSTALL.md : Instructions avec nouvelle nomenclature
+- 📚 CHANGELOG.md : Historique corrigé
+- 📚 composer.json : Keywords et description actualisés
+- 📚 assist-redirect.html : Messages utilisateur mis à jour
+
+**Fichiers Modifiés :**
+- `public/assets/js/assist-button.js` (8 modifications)
+- `public/assets/js/assist-config.js.php` (4 modifications)
+- `public/assets/css/assist-button.css` (2 modifications)
+- `public/assist-redirect.html` (1 modification)
+- `composer.json` (2 modifications)
+- Documentation complète (README, INSTALL, CHANGELOG)
+
+---
+
+## Version 1.1.0 (30 octobre 2025)
+
+### 🎉 Refonte Majeure du Script d'Installation
+
+**Script Unifié `install-protocols.bat` :**
+- 🔄 Remplacement complet de `install-assist-protocols.bat`
+- 📋 Gestion de 5 étapes : Détection → dwrcc:// → ctrl-dw:// → assist-msra:// → Wrapper
+- 🎨 Interface colorée avec codes ANSI (support Windows 10/11/Server)
+- 🔍 Détection automatique de 6 chemins DWRCC.exe avec ordre de priorité
+- 🛡️ Vérification des droits administrateur avant toute opération
+
+**Support ANSI Automatique :**
+- ✨ Détection et activation automatique de VirtualTerminalLevel (Windows 10)
+- 🔄 Auto-restart du script pour appliquer les couleurs
+- 🧹 Nettoyage automatique de la clé registry en fin d'exécution (via fichier témoin)
+- 🎯 Optimisation processeur avec expansions immédiates (%COLOR% au lieu de !COLOR!)
+
+**Gestion des Gestionnaires Orphelins :**
+- 🔎 Détection automatique de ctrl-dw:// sans DWRCC.exe
+- 🔎 Détection automatique de assist-msra:// sans MSRA.exe
+- 🗑️ Suppression forcée des gestionnaires orphelins
+- ✅ Messages de confirmation pour chaque action
+
+**Gestion du Protocole dwrcc:// Original :**
+- 🔄 Détection des configurations pointant vers ancien wrapper
+- ⚠️ Proposition de restauration à la configuration originale Dameware
+- ✅ Vérification et validation de la configuration existante
+
+**Wrapper Dynamique rcbuttons-wrapper.bat :**
+- 📝 Génération automatique avec logique conditionnelle
+- 🎯 Contient uniquement les protocoles installés (Dameware et/ou MSRA)
+- 🧹 Nettoyage automatique de l'ancien remote-assist-wrapper.bat
+- ⚙️ Gestion intelligente des besoins (création/mise à jour/suppression)
+
+**Interface Utilisateur Améliorée :**
+- 🎨 Codes couleurs : Vert (succès), Jaune (attention), Rouge (erreur), Cyan (info)
+- 📊 Récapitulatif structuré avec sections (+-- DAMEWARE / MSRA / WRAPPER / SUPPORT ANSI)
+- ⏱️ Timeouts automatiques (2 sec) au lieu de pause manuelle
+- 🔄 Mode interactif avec choix [M]ettre à jour / [U]tiliser / [S]upprimer
+
+**Corrections et Optimisations :**
+- 🔧 Gestion correcte des espaces dans les chemins DWRCC.exe
+- 📝 Messages contextuels selon l'état des installations
+- 🎯 Affichage conditionnel du message "Vous pouvez utiliser les boutons GLPI"
+- 🧪 Tests approfondis sur Windows 10, 11 et Server 2025
+
+### 📚 Documentation
+
+- ✅ Mise à jour complète du README.md avec instructions claires
+- ✅ Mise à jour de INSTALL.md avec procédures détaillées
+- ✅ Ajout d'avertissements sur l'installation OBLIGATOIRE sur chaque poste
+- ✅ Création du .gitignore pour exclure les .bat et .md du clonage
+- ✅ Documentation des nouvelles fonctionnalités dans version.json
+
+---
+
 ## Version 1.0.2 (28 janvier 2025)
 
 ### 🚀 Nouvelles Fonctionnalités
@@ -10,9 +95,9 @@
 - Permet d'activer/désactiver les logs de la console facilement
 
 **Interface Utilisateur Améliorée :**
-- Nouvelle palette de couleurs CIPS : dégradé #26a69a → #00897b (thème médical turquoise)
+- Nouvelle palette de couleurs MSRA : dégradé #26a69a → #00897b (thème turquoise)
 - Titres de boutons personnalisés et explicites :
-  - CIPS : "Offrir une assistance"
+  - MSRA : "Offrir une assistance"
   - Dameware : "Lancer la prise de main à distance"
 - Ouverture des outils dans le même onglet (_self) au lieu de nouveaux onglets
 
@@ -193,7 +278,7 @@ Le serveur IIS n'a pas les droits d'écriture sur `/public` de GLPI (racine).
 - [ ] Ouvrir une fiche ordinateur dans GLPI
 - [ ] Vérifier l'apparition des boutons selon le profil
 - [ ] Vérifier dans la console JS que le bon nom est détecté (pas "Ordinateur")
-- [ ] Cliquer sur "Assistance CIPS" → Doit ouvrir `msra.exe`
+- [ ] Cliquer sur "Assistance MSRA" → Doit ouvrir `msra.exe`
 - [ ] Cliquer sur "Contrôle Dameware" → Doit ouvrir Dameware
 - [ ] Vérifier qu'il n'y a pas d'erreurs dans la console JS
 
@@ -204,8 +289,3 @@ Le serveur IIS n'a pas les droits d'écriture sur `/public` de GLPI (racine).
 - ✅ GLPI 11.0+
 - ✅ Windows 10/11 (pour les protocoles)
 - ✅ Navigateurs modernes (Chrome, Edge, Firefox)
-
----
-
-**Date :** 28 octobre 2025  
-**Version :** 1.0.1

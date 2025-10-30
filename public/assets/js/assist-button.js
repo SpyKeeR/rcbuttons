@@ -98,10 +98,10 @@
      */
     function injectRCButtons() {
         const config = window.GLPI_RCBUTTONS_CONFIG || {};
-        const isCIPS = config.isCIPSProfile || false;
+        const isMSRA = config.isMSRAProfile || false;
         const isAdmin = config.isAdminProfile || false;
         
-        debugLog('[RCButtons] Profil CIPS:', isCIPS);
+        debugLog('[RCButtons] Profil MSRA:', isMSRA);
         debugLog('[RCButtons] Profil Admin:', isAdmin);
         
         // Récupérer le nom de l'ordinateur
@@ -129,14 +129,14 @@
         // Afficher les boutons selon le profil
         let buttonCount = 0;
         
-        // Si profil CIPS ou Admin : afficher bouton CIPS
-        if (isCIPS) {
-            const cipsLink = links.find(link => link.type === 'cips');
-            if (cipsLink) {
-                const button = createRCButton(cipsLink, 'cips');
+        // Si profil MSRA ou Admin : afficher bouton MSRA
+        if (isMSRA) {
+            const msraLink = links.find(link => link.type === 'msra');
+            if (msraLink) {
+                const button = createRCButton(msraLink, 'msra');
                 targetContainer.appendChild(button);
                 buttonCount++;
-                debugLog('[RCButtons] Bouton CIPS ajouté');
+                debugLog('[RCButtons] Bouton MSRA ajouté');
             }
         }
         
@@ -195,8 +195,8 @@
         return [
             {
                 url: baseUrl + '?protocol=assist-msra&computer=' + encodeURIComponent(computerName),
-                text: 'Assistance CIPS',
-                type: 'cips'
+                text: 'Assistance MSRA',
+                type: 'msra'
             },
             {
                 url: baseUrl + '?protocol=ctrl-dw&computer=' + encodeURIComponent(computerName),
@@ -266,10 +266,10 @@
         const icon = document.createElement('i');
         const text = document.createElement('span');
         
-        if (type === 'cips') {
+        if (type === 'msra') {
             button.title = 'Offrir une assistance';
             icon.className = 'fas fa-desktop';
-            text.textContent = ' Assistance CIPS';
+            text.textContent = ' Assistance MSRA';
         } else if (type === 'dameware') {
             button.title = 'Lancer la prise de main à distance';
             icon.className = 'fas fa-headset';
