@@ -1,0 +1,14 @@
+# Scripts .bat à exclure du clone Git
+# Ces fichiers contiennent des configurations spécifiques aux postes clients
+*.bat
+
+# Fichiers .reg (configurations registre Windows)
+*.reg
+
+# Logs et fichiers temporaires
+*.log
+*.tmp
+
+# Fichiers système
+.DS_Store
+Thumbs.db

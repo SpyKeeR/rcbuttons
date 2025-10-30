@@ -1,4 +1,45 @@
-# Résumé des Corrections - Plugin AssistLinks
+# Résumé des Modifications - Plugin RCButtons
+
+## Version 1.0.2 (28 janvier 2025)
+
+### 🚀 Nouvelles Fonctionnalités
+
+**Mode Debug Configurable :**
+- Ajout d'une variable `$enable_debug_logs` dans `assist-config.js.php`
+- Fonctions de logging conditionnelles : `debugLog()`, `debugWarn()`, `debugError()`
+- Permet d'activer/désactiver les logs de la console facilement
+
+**Interface Utilisateur Améliorée :**
+- Nouvelle palette de couleurs CIPS : dégradé #26a69a → #00897b (thème médical turquoise)
+- Titres de boutons personnalisés et explicites :
+  - CIPS : "Offrir une assistance"
+  - Dameware : "Lancer la prise de main à distance"
+- Ouverture des outils dans le même onglet (_self) au lieu de nouveaux onglets
+
+**Détection des Gestionnaires de Protocole :**
+- Page `assist-redirect.html` avec détection intelligente (événements blur/visibilitychange)
+- Message de succès avec redirection automatique (3 secondes)
+- Message d'erreur avec lien direct vers le `.bat` d'installation sur GitHub (15 secondes)
+- Favicon ajouté pour la page de redirection
+
+### 🔧 Optimisations
+
+**Extraction du Nom d'Ordinateur Simplifiée :**
+- Fonction `getComputerName()` épurée et réduite (~60 lignes → ~15 lignes)
+- Une seule méthode fiable : extraction depuis `.card-title` avec séparateur " - "
+- Préserve les tirets internes dans les noms d'ordinateurs (ex: PC-BUREAU-01)
+
+**Gestion des Fichiers :**
+- Ajout du `.gitignore` pour exclure les `.bat` et `.reg` des clones Git
+- Permet toujours les modifications locales et push via VSCode
+
+### 📚 Documentation
+
+- Mise à jour du CHANGELOG avec la version 1.0.2
+- Correction de la date de release (octobre 2025 → janvier 2025)
+- Documentation claire des nouvelles fonctionnalités
+
+---
 
 ## Version 1.0.1 (28 octobre 2025)
 

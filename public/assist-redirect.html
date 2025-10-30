@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirection assistance à distance</title>
+    <link rel="icon" type="image/x-icon" href="/pics/favicon.ico">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,6 +45,15 @@
             border-radius: 8px;
             margin-top: 20px;
             border: 1px solid rgba(255,255,255,0.2);
+            white-space: pre-line;
+        }
+        .error a {
+            color: #fff;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        .error a:hover {
+            color: #e3f2fd;
         }
         .success {
             color: #e8f5e9;
@@ -172,30 +182,75 @@
             // Construction de l'URL du protocole
             const protocolUrl = `${protocol}://${computerName}`;
             
-            // Tentative de lancement du protocole
-            try {
-                // Méthode 1 : Iframe invisible
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = protocolUrl;
-                document.body.appendChild(iframe);
+            // Variable pour suivre si l'utilisateur a quitté la page (protocole lancé avec succès)
+            let protocolLaunched = false;
+            let blurDetected = false;
+            
+            // Détecter si la fenêtre perd le focus (l'application externe s'ouvre)
+            const onBlur = () => {
+                blurDetected = true;
+                protocolLaunched = true;
+            };
+            
+            // Détecter si l'utilisateur revient sur la page (visibilitychange)
+            const onVisibilityChange = () => {
+                if (document.hidden === false && blurDetected) {
+                    // L'utilisateur est revenu, l'application a probablement été lancée
+                    protocolLaunched = true;
+                }
+            };
+            
+            window.addEventListener('blur', onBlur);
+            document.addEventListener('visibilitychange', onVisibilityChange);
+            
+            // Tentative de lancement du protocole via iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = protocolUrl;
+            document.body.appendChild(iframe);
+            
+            // Attendre pour vérifier si le protocole a été lancé
+            setTimeout(() => {
+                // Nettoyer les listeners
+                window.removeEventListener('blur', onBlur);
+                document.removeEventListener('visibilitychange', onVisibilityChange);
                 
-                // Attendre un peu pour laisser le protocole se lancer
-                setTimeout(() => {
+                if (protocolLaunched) {
+                    // Le protocole semble avoir été lancé (la fenêtre a perdu le focus)
                     showSuccess(
-                        '✓ Protocole lancé',
-                        `L'application ${protocolNames[protocol]} devrait s'ouvrir. Si ce n'est pas le cas, vérifiez que les gestionnaires de protocoles sont installés sur votre poste.`,
-                        4000 // 4 secondes
+                        '✓ Protocole lancé avec succès',
+                        `L'application ${protocolNames[protocol]} a été ouverte.`,
+                        3000 // 3 secondes
                     );
-                }, 500);
-                
-            } catch (error) {
-                showError(
-                    '❌ Erreur de lancement',
-                    `Impossible de lancer le protocole : ${error.message}. Vérifiez que les gestionnaires de protocoles sont installés.`,
-                    15000 // 15 secondes
-                );
-            }
+                } else {
+                    // Le protocole n'a probablement pas été lancé
+                    const githubLink = 'https://github.com/SpyKeeR/rcbuttons/releases/latest';
+                    hideSpinner();
+                    statusEl.textContent = '⚠️ Gestionnaire de protocole manquant';
+                    messageEl.innerHTML = `Le protocole "<strong>${protocol}://</strong>" n'est pas installé sur votre poste.<br><br>Téléchargez et exécutez <strong>install-assist-protocols.bat</strong> en tant qu'administrateur.<br><br>📥 <a href="${githubLink}" target="_blank">Télécharger depuis GitHub Releases</a>`;
+                    messageEl.className = 'error';
+                    messageEl.style.display = 'block';
+                    
+                    // Compte à rebours
+                    let secondsLeft = 15;
+                    countdownEl.textContent = `Retour automatique dans ${secondsLeft} seconde(s)...`;
+                    countdownEl.style.display = 'block';
+                    
+                    const countdownInterval = setInterval(() => {
+                        secondsLeft--;
+                        if (secondsLeft > 0) {
+                            countdownEl.textContent = `Retour automatique dans ${secondsLeft} seconde(s)...`;
+                        } else {
+                            clearInterval(countdownInterval);
+                        }
+                    }, 1000);
+                    
+                    // Retour à la page précédente après le délai
+                    setTimeout(() => {
+                        window.history.back();
+                    }, 15000);
+                }
+            }, 2000); // Attendre 2 secondes pour détecter le blur
         }
     </script>
 </body>

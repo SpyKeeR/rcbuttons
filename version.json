@@ -1,6 +1,6 @@
 {
-  "version": "1.0.1",
-  "release_date": "2025-10-28",
+  "version": "1.0.2",
+  "release_date": "2025-01-28",
   "glpi_min_version": "11.0.0",
   "glpi_max_version": "11.0.99",
   "changes": [

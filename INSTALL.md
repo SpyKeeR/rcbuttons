@@ -1,62 +1,77 @@
-# Guide d'Installation Rapide - AssistLinks Plugin
+# Guide d'Installation - RCButtons Plugin
 
 ## 📋 Vue d'ensemble
 
 Plugin GLPI qui ajoute des boutons d'assistance à distance directement sur les fiches ordinateurs.
 
+**Version :** 1.0.2  
+**Compatible :** GLPI 11.0.0 à 11.0.99
+
 **Protocoles supportés :**
-- `assist-msra://` → Microsoft Remote Assistance
+- `assist-msra://` → Microsoft Remote Assistance (CIPS)
 - `ctrl-dw://` → Dameware Remote Control
 
 ---
 
-## 🚀 Installation Rapide
+## 🚀 Installation Rapide (5 minutes)
 
 ### Étape 1 : Installation du plugin GLPI
 
 ```bash
 # Dans le dossier plugins de GLPI
 cd /var/www/html/glpi/plugins/
-git clone [URL_DU_REPO] assistbutton
-# ou décompressez le ZIP dans assistbutton/
+git clone https://github.com/SpyKeeR/rcbuttons.git rcbuttons
+# ou décompressez le ZIP dans rcbuttons/
 ```
 
 **Via l'interface GLPI :**
 1. Configuration → Plugins
-2. Chercher "Boutons Assistance Externe"
+2. Chercher "Remote Control Buttons"
 3. Cliquer sur "Installer"
 4. Cliquer sur "Activer"
 
-✅ Le fichier `assist-redirect.html` est automatiquement déployé dans `public/`
+✅ Les fichiers sont automatiquement accessibles via le dossier `public/`
 
 ---
 
 ### Étape 2 : Déploiement des protocoles sur les postes
 
+⚠️ **Important** : Les fichiers `.bat` ne sont pas inclus dans le dépôt Git (voir `.gitignore`).  
+Téléchargez `install-assist-protocols.bat` depuis GitHub Releases ou créez-le manuellement.
+
 **Option A : Déploiement GPO (Recommandé)**
 
-1. Copier `install-assist-protocols.bat` sur un partage réseau
-2. Créer une GPO :
+1. Télécharger le fichier `.bat` depuis GitHub
+2. Le copier sur un partage réseau accessible
+3. Créer une GPO :
    - Configuration ordinateur → Stratégies → Paramètres Windows → Scripts
    - Démarrage → Ajouter → `\\serveur\partage\install-assist-protocols.bat`
-3. Appliquer la GPO sur l'OU des techniciens
+4. Appliquer la GPO sur l'OU des techniciens
 
 **Option B : Installation manuelle**
 
-1. Copier `install-assist-protocols.bat` sur le poste
+1. Télécharger `install-assist-protocols.bat` depuis GitHub
 2. Clic droit → "Exécuter en tant qu'administrateur"
-3. Vérifier les messages de succès
+3. Vérifier les messages de succès dans la console
+
+**Option C : Création manuelle du .bat**
+
+Voir le contenu du fichier dans le dépôt GitHub (historique Git) si besoin de le recréer.
 
 ---
 
 ### Étape 3 : Configuration des profils
 
-Éditer `public/assets/js/assist-config.js.php` :
+Éditer `public/assets/js/assist-config.js.php` (lignes 22-26) :
 
 ```php
-// Ligne 17-18 : IDs des profils autorisés
-$cips_profile_ids = [9, 3];  // CIPS et Admin voient assist-msra
-$admin_profile_ids = [3];    // Seul Admin voit ctrl-dw
+// === CONFIGURATION ===
+// IDs des profils GLPI autorisés
+$cips_profile_ids = [9, 3];     // Profils pouvant utiliser Assistance CIPS
+$admin_profile_ids = [3];        // Profils pouvant utiliser Dameware
+
+// Activer/désactiver les logs de debug dans la console
+$enable_debug_logs = true;       // false en production recommandé
 ```
 
 **Trouver l'ID d'un profil :**
@@ -64,21 +79,26 @@ $admin_profile_ids = [3];    // Seul Admin voit ctrl-dw
 SELECT id, name FROM glpi_profiles;
 ```
 
+**Mode Debug :**
+- `true` : Affiche les logs détaillés dans la console (F12)
+- `false` : Désactive tous les logs (production)
+
 ---
 
 ## 🧪 Tests
 
 ### Test des protocoles
 
-Ouvrir `test-protocols.html` dans un navigateur et cliquer sur les boutons de test.
+Ouvrir `test-protocols.html` (non inclus dans Git) dans un navigateur et cliquer sur les boutons de test.
 
 ### Test dans GLPI
 
 1. Ouvrir une fiche ordinateur
 2. Vérifier l'apparition des boutons selon votre profil
 3. Ouvrir la console JS (F12) → Onglet Console
-4. Chercher les logs `[AssistButton]`
-5. Cliquer sur un bouton → L'application doit se lancer
+4. Chercher les logs `[RCButtons]` (si debug activé)
+5. Cliquer sur un bouton → Page de redirection → Outil lancé
+6. Si erreur : message avec lien vers le `.bat` d'installation sur GitHub
 
 ---
 
@@ -86,18 +106,29 @@ Ouvrir `test-protocols.html` dans un navigateur et cliquer sur les boutons de te
 
 ### Les boutons n'apparaissent pas
 
-**Console JS (F12) :**
+**Console JS (F12) - si `$enable_debug_logs = true` :**
 ```
-[AssistButton] Page ordinateur détectée
-[AssistButton] Profil CIPS: true
-[AssistButton] Nom trouvé dans input[name="name"]: PC-BUREAU-01
-[AssistButton] Bouton CIPS ajouté
+[RCButtons] Page ordinateur détectée
+[RCButtons] Profil CIPS: true
+[RCButtons] Nom trouvé: PC-BUREAU-01
+[RCButtons] Bouton CIPS ajouté
 ```
 
 **Vérifications :**
 - [ ] Plugin activé dans GLPI
 - [ ] Vous êtes sur une fiche ordinateur (`computer.form.php?id=XXX`)
 - [ ] Votre profil est dans la liste des profils autorisés
+- [ ] Le mode debug est activé pour voir les logs
+
+### Le protocole ne se lance pas
+
+**Symptôme :** Message d'erreur sur la page de redirection
+
+**Solution :**
+1. Cliquer sur le lien GitHub dans le message d'erreur
+2. Télécharger `install-assist-protocols.bat`
+3. L'exécuter en tant qu'administrateur
+4. Redémarrer le navigateur
 - [ ] Le champ "Nom" est renseigné dans la fiche
 
 ---

@@ -6,6 +6,25 @@
 (function() {
     'use strict';
     
+    // Fonction de log conditionnelle basée sur le mode debug
+    function debugLog() {
+        if (window.GLPI_RCBUTTONS_CONFIG && window.GLPI_RCBUTTONS_CONFIG.debugMode) {
+            console.log.apply(console, arguments);
+        }
+    }
+    
+    function debugWarn() {
+        if (window.GLPI_RCBUTTONS_CONFIG && window.GLPI_RCBUTTONS_CONFIG.debugMode) {
+            console.warn.apply(console, arguments);
+        }
+    }
+    
+    function debugError() {
+        if (window.GLPI_RCBUTTONS_CONFIG && window.GLPI_RCBUTTONS_CONFIG.debugMode) {
+            console.error.apply(console, arguments);
+        }
+    }
+    
     // Attendre que le DOM soit chargé
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', start);
@@ -23,7 +42,7 @@
         // Attendre que GLPI_RCBUTTONS_CONFIG soit défini (polling) avant d'injecter
         waitForConfig(5000, 200).then(function(defined) {
             if (!defined) {
-                console.warn('[RCButtons] GLPI_RCBUTTONS_CONFIG non défini après attente');
+                debugWarn('[RCButtons] GLPI_RCBUTTONS_CONFIG non défini après attente');
             }
             // Petit délai supplémentaire pour laisser la page finir de charger
             setTimeout(function() {
@@ -66,11 +85,11 @@
         const hasId = url.indexOf('id=') !== -1 && url.match(/[?&]id=(\d+)/);
         
         if (!isComputerForm || !hasId) {
-            console.log('[RCButtons] Pas sur une page de fiche ordinateur');
+            debugLog('[RCButtons] Pas sur une page de fiche ordinateur');
             return false;
         }
         
-        console.log('[RCButtons] Page ordinateur détectée');
+        debugLog('[RCButtons] Page ordinateur détectée');
         return true;
     }
     
@@ -82,28 +101,28 @@
         const isCIPS = config.isCIPSProfile || false;
         const isAdmin = config.isAdminProfile || false;
         
-        console.log('[RCButtons] Profil CIPS:', isCIPS);
-        console.log('[RCButtons] Profil Admin:', isAdmin);
+        debugLog('[RCButtons] Profil CIPS:', isCIPS);
+        debugLog('[RCButtons] Profil Admin:', isAdmin);
         
         // Récupérer le nom de l'ordinateur
         const computerName = getComputerName();
         
         if (!computerName) {
-            console.log('[RCButtons] Impossible de récupérer le nom de l\'ordinateur');
+            debugLog('[RCButtons] Impossible de récupérer le nom de l\'ordinateur');
             return;
         }
         
-        console.log('[RCButtons] Ordinateur:', computerName);
+        debugLog('[RCButtons] Ordinateur:', computerName);
         
         // Créer les liens dynamiquement
         const links = createRCButtonsLinks(computerName);
-        console.log('[RCButtons] Liens générés:', links);
+        debugLog('[RCButtons] Liens générés:', links);
         
         // Trouver le conteneur principal
         const targetContainer = findTargetContainer();
         
         if (!targetContainer) {
-            console.log('[RCButtons] Conteneur cible non trouvé');
+            debugLog('[RCButtons] Conteneur cible non trouvé');
             return;
         }
         
@@ -117,7 +136,7 @@
                 const button = createRCButton(cipsLink, 'cips');
                 targetContainer.appendChild(button);
                 buttonCount++;
-                console.log('[RCButtons] Bouton CIPS ajouté');
+                debugLog('[RCButtons] Bouton CIPS ajouté');
             }
         }
         
@@ -128,25 +147,25 @@
                 const button = createRCButton(damewareLink, 'dameware');
                 targetContainer.appendChild(button);
                 buttonCount++;
-                console.log('[RCButtons] Bouton Dameware ajouté');
+                debugLog('[RCButtons] Bouton Dameware ajouté');
             }
         }
         
         if (buttonCount > 0) {
-            console.log('[RCButtons] ' + buttonCount + ' bouton(s) injecté(s) avec succès');
+            debugLog('[RCButtons] ' + buttonCount + ' bouton(s) injecté(s) avec succès');
         } else {
-            console.log('[RCButtons] Aucun bouton à afficher pour ce profil');
+            debugLog('[RCButtons] Aucun bouton à afficher pour ce profil');
         }
     }
     
     /**
      * Récupérer le nom de l'ordinateur depuis la page
-     * Utilise plusieurs méthodes de fallback pour maximiser les chances de succès
+     * Méthode optimisée : extraction depuis le card-title
      */
     function getComputerName() {
-        console.log('[RCButtons] Recherche du nom d\'ordinateur...');
+        debugLog('[RCButtons] Recherche du nom d\'ordinateur...');
         
-        // Méthode 1 : Chercher dans le breadcrumb ou card-title en priorité
+        // Chercher dans le breadcrumb ou card-title
         // Format attendu : "Ordinateur - INF-TEST-01 - ID 2" → on extrait "INF-TEST-01"
         const cardTitle = document.querySelector('.card-title, h2.card-title, .breadcrumb-item.active');
         if (cardTitle) {
@@ -157,50 +176,12 @@
             // Format: ["Ordinateur", "INF-TEST-01", "ID 2"]
             if (segments.length >= 2) {
                 const name = segments[1];
-                console.log('[RCButtons] ✓ Nom trouvé dans card-title/breadcrumb (segment 2):', name);
+                debugLog('[RCButtons] ✓ Nom trouvé dans card-title:', name);
                 return name;
             }
         }
         
-        // Méthode 2 : Liste de sélecteurs d'inputs à tester
-        const selectors = [
-            'input[name="name"]',                    // Sélecteur standard
-            'input.form-control[name="name"]',       // Input Bootstrap avec name="name"
-            'input[type="text"][name="name"]',       // Input texte avec name="name"
-            'input[id*="name"][type="text"]',        // Input avec ID contenant "name"
-            '#textfield_name',                       // ID textfield_name (anciennes versions)
-            '.form-field-name input',                // Input dans un conteneur form-field-name
-            'span.form-field-value'                  // Span avec la valeur (lecture seule)
-        ];
-        
-        for (let i = 0; i < selectors.length; i++) {
-            const element = document.querySelector(selectors[i]);
-            if (element) {
-                const name = element.value || element.textContent;
-                if (name && name.trim()) {
-                    console.log('[RCButtons] ✓ Nom trouvé via sélecteur "' + selectors[i] + '":', name.trim());
-                    return name.trim();
-                }
-            }
-        }
-        
-        // Méthode 3 : Parcourir TOUS les inputs avec name="name" (au cas où)
-        const allNameInputs = document.querySelectorAll('input[name="name"]');
-        for (let i = 0; i < allNameInputs.length; i++) {
-            if (allNameInputs[i].value && allNameInputs[i].value.trim()) {
-                const name = allNameInputs[i].value.trim();
-                console.log('[RCButtons] ✓ Nom trouvé via querySelectorAll input[name="name"][' + i + ']:', name);
-                return name;
-            }
-        }
-        
-        console.error('[RCButtons] ✗ Impossible de récupérer le nom de l\'ordinateur après toutes les tentatives');
-        console.log('[RCButtons] Debug - Éléments trouvés:', {
-            'input[name="name"]': document.querySelectorAll('input[name="name"]').length,
-            'input.form-control': document.querySelectorAll('input.form-control').length,
-            '.card-title': document.querySelectorAll('.card-title').length,
-            'Premier input[name="name"] value': document.querySelector('input[name="name"]')?.value
-        });
+        debugError('[RCButtons] ✗ Impossible de récupérer le nom de l\'ordinateur');
         return null;
     }
     
@@ -244,7 +225,7 @@
         for (let i = 0; i < selectors.length; i++) {
             const container = document.querySelector(selectors[i]);
             if (container) {
-                console.log('[RCButtons] Conteneur trouvé:', selectors[i]);
+                debugLog('[RCButtons] Conteneur trouvé:', selectors[i]);
                 
                 // Créer un wrapper si nécessaire
                 let wrapper = container.querySelector('.rcbuttons-wrapper');
@@ -262,7 +243,7 @@
             }
         }
         
-        console.warn('[RCButtons] Aucun conteneur trouvé, utilisation du fallback');
+        debugWarn('[RCButtons] Aucun conteneur trouvé, utilisation du fallback');
         
         // Fallback: créer un conteneur flottant en haut à droite
         const fallback = document.createElement('div');
