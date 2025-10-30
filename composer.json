@@ -1,0 +1,26 @@
+{
+    "name": "spykeer/rcbuttons",
+    "description": "GLPI plugin to add external remote control buttons (CIPS/Dameware) on computer form pages",
+    "type": "glpi-plugin",
+    "keywords": ["glpi", "plugin", "remote control", "cips", "dameware", "assistance"],
+    "homepage": "https://github.com/SpyKeeR/rcbuttons",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "SpyKeeR"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "glpi-project/tools": "^0.8"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.1.99"
+        },
+        "sort-packages": true
+    }
+}

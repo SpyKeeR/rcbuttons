@@ -1,0 +1,45 @@
+{
+  "version": "1.0.1",
+  "release_date": "2025-10-28",
+  "glpi_min_version": "11.0.0",
+  "glpi_max_version": "11.0.99",
+  "changes": [
+    {
+      "type": "fix",
+      "description": "Amélioration du script de nettoyage : supprime assist-msra:// et ctrl-dw://, restaure dwrcc:// original"
+    },
+    {
+      "type": "fix",
+      "description": "Remplacement du protocole dwrcc:// par ctrl-dw:// pour éviter les conflits"
+    },
+    {
+      "type": "fix",
+      "description": "Correction de l'extraction du nom d'ordinateur (filtrage du mot 'Ordinateur')"
+    },
+    {
+      "type": "feature",
+      "description": "Restructuration avec dossier public/ pour accessibilité web"
+    },
+    {
+      "type": "feature",
+      "description": "Déploiement automatique de assist-redirect.html via hook d'installation"
+    },
+    {
+      "type": "feature",
+      "description": "Ajout de scripts de test (test-protocols.html et test-protocols.ps1)"
+    },
+    {
+      "type": "feature",
+      "description": "Ajout de documentation complète (README, INSTALL, MIGRATION, CHANGELOG)"
+    }
+  ],
+  "breaking_changes": [
+    "Le protocole dwrcc:// n'est plus utilisé, remplacé par ctrl-dw://",
+    "Structure des dossiers modifiée : assets/ → public/assets/",
+    "Nécessite de redéployer install-assist-protocols.bat sur les postes clients"
+  ],
+  "migration_notes": "Voir MIGRATION.md pour le guide détaillé",
+  "authors": [
+    "SpyKeeR"
+  ]
+}

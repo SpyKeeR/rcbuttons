@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirection assistance à distance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #26a69a 0%, #00897b 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255,255,255,0.15);
+            padding: 40px 50px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            max-width: 500px;
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            color: #ffebee;
+            background: rgba(244, 67, 54, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .success {
+            color: #e8f5e9;
+            background: rgba(76, 175, 80, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .countdown {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖥️ Lancement de l'assistance à distance...</h1>
+        <div class="spinner" id="spinner"></div>
+        <p id="status">Initialisation...</p>
+        <p id="message" style="display:none;"></p>
+        <p id="countdown" class="countdown" style="display:none;"></p>
+    </div>
+
+    <script>
+        // Récupération des paramètres depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const computerName = urlParams.get('computer');
+        const protocol = urlParams.get('protocol') || 'assist-msra'; // Par défaut: assist-msra
+        
+        const statusEl = document.getElementById('status');
+        const messageEl = document.getElementById('message');
+        const countdownEl = document.getElementById('countdown');
+        const spinnerEl = document.getElementById('spinner');
+
+        // Validation du protocole
+        const validProtocols = ['assist-msra', 'ctrl-dw'];
+        
+        function hideSpinner() {
+            if (spinnerEl) {
+                spinnerEl.style.display = 'none';
+            }
+        }
+        
+        function showError(title, message, delay) {
+            hideSpinner();
+            statusEl.textContent = title;
+            messageEl.textContent = message;
+            messageEl.className = 'error';
+            messageEl.style.display = 'block';
+            
+            // Compte à rebours
+            let secondsLeft = Math.floor(delay / 1000);
+            countdownEl.textContent = `Retour automatique dans ${secondsLeft} seconde(s)...`;
+            countdownEl.style.display = 'block';
+            
+            const countdownInterval = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    countdownEl.textContent = `Retour automatique dans ${secondsLeft} seconde(s)...`;
+                } else {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+            
+            // Retour à la page précédente après le délai
+            setTimeout(() => {
+                window.history.back();
+            }, delay);
+        }
+        
+        function showSuccess(title, message, delay) {
+            hideSpinner();
+            statusEl.textContent = title;
+            messageEl.textContent = message;
+            messageEl.className = 'success';
+            messageEl.style.display = 'block';
+            
+            // Compte à rebours
+            let secondsLeft = Math.floor(delay / 1000);
+            countdownEl.textContent = `Retour automatique dans ${secondsLeft} seconde(s)...`;
+            countdownEl.style.display = 'block';
+            
+            const countdownInterval = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    countdownEl.textContent = `Retour automatique dans ${secondsLeft} seconde(s)...`;
+                } else {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+            
+            // Retour à la page précédente après le délai
+            setTimeout(() => {
+                window.history.back();
+            }, delay);
+        }
+        
+        if (!validProtocols.includes(protocol)) {
+            showError(
+                '❌ Protocole invalide',
+                `Le protocole "${protocol}" n'est pas supporté. Protocoles valides : ${validProtocols.join(', ')}`,
+                12000 // 12 secondes
+            );
+        } else if (!computerName) {
+            showError(
+                '❌ Nom d\'ordinateur manquant',
+                'Aucun nom d\'ordinateur n\'a été fourni dans l\'URL. Veuillez réessayer.',
+                10000 // 10 secondes
+            );
+        } else {
+            // Affichage du protocole utilisé
+            const protocolNames = {
+                'assist-msra': 'Microsoft Remote Assistance (CIPS)',
+                'ctrl-dw': 'Dameware Remote Control'
+            };
+            
+            statusEl.textContent = `✓ Connexion vers : ${computerName}`;
+            statusEl.innerHTML += `<br><small style="opacity: 0.9;">Protocole : ${protocolNames[protocol]}</small>`;
+            
+            // Construction de l'URL du protocole
+            const protocolUrl = `${protocol}://${computerName}`;
+            
+            // Tentative de lancement du protocole
+            try {
+                // Méthode 1 : Iframe invisible
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = protocolUrl;
+                document.body.appendChild(iframe);
+                
+                // Attendre un peu pour laisser le protocole se lancer
+                setTimeout(() => {
+                    showSuccess(
+                        '✓ Protocole lancé',
+                        `L'application ${protocolNames[protocol]} devrait s'ouvrir. Si ce n'est pas le cas, vérifiez que les gestionnaires de protocoles sont installés sur votre poste.`,
+                        4000 // 4 secondes
+                    );
+                }, 500);
+                
+            } catch (error) {
+                showError(
+                    '❌ Erreur de lancement',
+                    `Impossible de lancer le protocole : ${error.message}. Vérifiez que les gestionnaires de protocoles sont installés.`,
+                    15000 // 15 secondes
+                );
+            }
+        }
+    </script>
+</body>
+</html>

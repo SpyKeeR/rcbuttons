@@ -1,0 +1,134 @@
+/**
+ * Styles pour les boutons de contrôle à distance (RCButtons)
+ */
+
+.rcbuttons-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0;
+    padding: 0;
+    background: transparent;
+    border-radius: 4px;
+}
+
+.rcbuttons-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.rcbuttons-btn:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.rcbuttons-btn:active {
+    transform: scale(0.98);
+}
+
+.rcbuttons-btn i {
+    font-size: 12px;
+}
+
+/* Style pour le conteneur flottant (fallback) */
+.rcbuttons-floating {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 9999;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+/* Adaptation pour mobile */
+@media (max-width: 768px) {
+    .rcbuttons-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .rcbuttons-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .rcbuttons-floating {
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+    }
+}
+
+/* Animation d'apparition */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.rcbuttons-wrapper {
+    animation: slideInRight 0.4s ease-out;
+}
+
+/* Styles spécifiques selon le type */
+/* Bouton CIPS - Couleurs santé/hôpital (vert menthe/turquoise) */
+.rcbuttons-btn[href*="msra"],
+.rcbuttons-btn[href*="assist-msra"] {
+    background: linear-gradient(135deg, #26a69a 0%, #00897b 100%);
+}
+
+.rcbuttons-btn[href*="msra"]:hover,
+.rcbuttons-btn[href*="assist-msra"]:hover {
+    background: linear-gradient(135deg, #00897b 0%, #26a69a 100%);
+}
+
+/* Bouton Dameware - Bleu */
+.rcbuttons-btn[href*="dameware"] {
+    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+}
+
+.rcbuttons-btn[href*="dameware"]:hover {
+    background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+}
+
+/* Indicateur de chargement */
+.rcbuttons-btn.loading::after {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
