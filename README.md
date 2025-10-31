@@ -17,7 +17,7 @@
 - 🎨 **Interface soignée** : design moderne avec animations et thème médical
 - 🛠️ **Mode debug** configurable pour le diagnostic
 - ✅ **Non-intrusif** : aucune modification du core GLPI
-- 🌐 **Compatible** GLPI 11.0.0 à 11.0.99
+- 🌐 **Compatible** GLPI 11.0.x
 
 ---
 
@@ -25,10 +25,15 @@
 
 ### 1️⃣ Installation du plugin
 
+- Bash
 ```bash
 cd /var/www/html/glpi/plugins/
 git clone https://github.com/SpyKeeR/rcbuttons.git rcbuttons
 ```
+- Manuelle
+   - **Télécharger** le dépôt [GitHub](https://github.com/SpyKeeR/rcbuttons)
+   - **Extraire** son contenu dans `GLPI_DIR/plugins/rcbuttons`
+
 
 Puis dans GLPI : **Configuration → Plugins → Installer → Activer**
 
@@ -190,6 +195,6 @@ Les contributions sont les bienvenues ! N'hésitez pas à :
 
 ---
 
-**Version** : 1.0.1  
+**Version** : 1.1.2  
 **Auteur** : SpyKeeR  
 **Licence** : GPLv3+
